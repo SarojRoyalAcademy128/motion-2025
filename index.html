@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Result Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 32px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            animation: slideIn 1s ease;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 18px 25px;
+            border: none;
+            background: #f5f7fa;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-btn {
+            background: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #3a5999;
+        }
+        
+        .class-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .class-btn {
+            padding: 12px 25px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .class-btn.active {
+            background: #4b6cb7;
+            color: white;
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f4f8;
+            color: #4b6cb7;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background: #f5f7fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .info-item strong {
+            color: #4b6cb7;
+        }
+        
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .grades-table th, .grades-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .grades-table th {
+            background: #f5f7fa;
+            color: #4b6cb7;
+        }
+        
+        .grades-table tr:hover {
+            background: #f9fbfd;
+        }
+        
+        .total-grade {
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #4b6cb7;
+        }
+        
+        .no-result {
+            text-align: center;
+            padding: 30px;
+            color: #e74c3c;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+        
+        .leaderboard {
+            margin-top: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f4f8;
+            color: #4b6cb7;
+        }
+        
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: #4b6cb7;
+            color: white;
+        }
+        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .leaderboard-table th {
+            background: #f5f7fa;
+            color: #4b6cb7;
+        }
+        
+        .leaderboard-table tr:nth-child(1) {
+            background: linear-gradient(45deg, #ffd700, #fff8e1);
+        }
+        
+        .leaderboard-table tr:nth-child(2) {
+            background: linear-gradient(45deg, #c0c0c0, #f5f5f5);
+        }
+        
+        .leaderboard-table tr:nth-child(3) {
+            background: linear-gradient(45deg, #cd7f32, #f9e0c5);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f0f4f8;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        @media (max-width: 600px) {
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+            
+            .search-input {
+                border-radius: 15px 15px 0 0;
+            }
+            
+            .search-btn {
+                border-radius: 0 0 15px 15px;
+                padding: 15px;
+            }
+            
+            .class-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>Saroj Royal Academy</h1>
+            <p class="subtitle">Motion 2025</p>
+        </header>
+        
+        <div class="content">
+            <div class="class-selector">
+                <button class="class-btn active" data-class="9">9th Grade</button>
+                <button class="class-btn" data-class="11">11th Grade</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Enter your roll number (e.g., 1, 5, 23)..." id="rollNumber">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i> Check Result
+                </button>
+            </div>
+            
+            <div class="no-result" id="noResult">
+                <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <p>No result found for the provided roll number. Please check and try again.</p>
+            </div>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="result-header">
+                    <h2>Academic Result 2023-2024</h2>
+                </div>
+                
+                <div class="student-info">
+                    <div class="info-item">
+                        <strong>Name:</strong> <span id="studentName">Pawan Rajbhar</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Roll No:</strong> <span id="studentRoll">23</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Class:</strong> <span id="studentClass">9th Grade</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Stream:</strong> <span id="studentStream">PCMB</span>
+                    </div>
+                </div>
+                
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks Obtained</th>
+                            <th>Maximum Marks</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradesBody">
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+                
+                <div class="total-grade">
+                    Overall Percentage: <span id="percentage">89%</span>
+                </div>
+            </div>
+            
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <h2>Class Leaderboard</h2>
+                </div>
+                
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-tab="9">9th Grade</button>
+                    <button class="tab-btn" data-tab="11-pcm">11th PCM</button>
+                    <button class="tab-btn" data-tab="11-pcb">11th PCB</button>
+                </div>
+                
+                <table class="leaderboard-table" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <!-- Leaderboard will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 School Result Portal. All rights reserved.</p>
+            <p>Designed for Academic Excellence</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBtn = document.getElementById('searchBtn');
+            const rollNumberInput = document.getElementById('rollNumber');
+            const resultContainer = document.getElementById('resultContainer');
+            const noResult = document.getElementById('noResult');
+            const classButtons = document.querySelectorAll('.class-btn');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            let currentClass = '9';
+            
+            // Student data with your requested names and rankings
+            const studentData = {
+                '9': [
+                    {rollNo: '23', name: 'Pawan Rajbhar', class: '9th Grade', stream: 'PCMB', percentage: '89.0',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 95, max: 100, grade: 'A+'},
+                         {name: 'Physics', obtained: 93, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 92, max: 100, grade: 'A+'},
+                         {name: 'Biology', obtained: 90, max: 100, grade: 'A+'}
+                     ]},
+                    {rollNo: '1', name: 'Abhash Tripathi', class: '9th Grade', stream: 'PCMB', percentage: '88.9',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 70, max: 100, grade: 'C'},
+                         {name: 'Physics', obtained: 98, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 95, max: 100, grade: 'A+'},
+                         {name: 'Biology', obtained: 93, max: 100, grade: 'A+'}
+                     ]},
+                    {rollNo: '6', name: 'Anshu Tiwari', class: '9th Grade', stream: 'PCMB', percentage: '87.5',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 92, max: 100, grade: 'A+'},
+                         {name: 'Physics', obtained: 89, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 86, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 83, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '32', name: 'Sana Pherdosh', class: '9th Grade', stream: 'PCMB', percentage: '86.2',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 88, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 87, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 85, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 85, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '27', name: 'Khushi Gupta', class: '9th Grade', stream: 'PCMB', percentage: '85.8',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 87, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 86, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 85, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 85, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '5', name: 'Ananya Singh', class: '9th Grade', stream: 'PCMB', percentage: '85.0',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 86, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 85, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 84, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 85, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '48', name: 'Shivani Singh', class: '9th Grade', stream: 'PCMB', percentage: '84.5',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 85, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 84, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 84, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 85, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '15', name: 'Siddhi Aggrawal', class: '9th Grade', stream: 'PCMB', percentage: '83.8',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 84, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 83, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 84, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 84, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '17', name: 'Nyra Sharma', class: '9th Grade', stream: 'PCMB', percentage: '83.2',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 83, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 83, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 83, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 84, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '8', name: 'Mahi Shirvastav', class: '9th Grade', stream: 'PCMB', percentage: '82.5',
+                     subjects: [
+                         {name: 'Mathematics', obtained: 82, max: 100, grade: 'A'},
+                         {name: 'Physics', obtained: 83, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 82, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 83, max: 100, grade: 'A'}
+                     ]}
+                ],
+                '11-pcm': [
+                    {rollNo: '5', name: 'Arjun Singh', class: '11th Grade', stream: 'PCM', percentage: '92.5',
+                     subjects: [
+                         {name: 'Physics', obtained: 95, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 93, max: 100, grade: 'A+'},
+                         {name: 'Mathematics', obtained: 90, max: 100, grade: 'A+'}
+                     ]},
+                    {rollNo: '12', name: 'Priya Sharma', class: '11th Grade', stream: 'PCM', percentage: '90.8',
+                     subjects: [
+                         {name: 'Physics', obtained: 92, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 91, max: 100, grade: 'A+'},
+                         {name: 'Mathematics', obtained: 89, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '3', name: 'Rahul Verma', class: '11th Grade', stream: 'PCM', percentage: '89.2',
+                     subjects: [
+                         {name: 'Physics', obtained: 90, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 89, max: 100, grade: 'A'},
+                         {name: 'Mathematics', obtained: 89, max: 100, grade: 'A'}
+                     ]}
+                ],
+                '11-pcb': [
+                    {rollNo: '8', name: 'Aarav Patel', class: '11th Grade', stream: 'PCB', percentage: '91.3',
+                     subjects: [
+                         {name: 'Physics', obtained: 93, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 92, max: 100, grade: 'A+'},
+                         {name: 'Biology', obtained: 89, max: 100, grade: 'A'}
+                     ]},
+                    {rollNo: '15', name: 'Isha Gupta', class: '11th Grade', stream: 'PCB', percentage: '89.7',
+                     subjects: [
+                         {name: 'Physics', obtained: 90, max: 100, grade: 'A+'},
+                         {name: 'Chemistry', obtained: 89, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 90, max: 100, grade: 'A+'}
+                     ]},
+                    {rollNo: '22', name: 'Vikram Joshi', class: '11th Grade', stream: 'PCB', percentage: '88.4',
+                     subjects: [
+                         {name: 'Physics', obtained: 88, max: 100, grade: 'A'},
+                         {name: 'Chemistry', obtained: 89, max: 100, grade: 'A'},
+                         {name: 'Biology', obtained: 88, max: 100, grade: 'A'}
+                     ]}
+                ]
+            };
+            
+            // Search for student results
+            searchBtn.addEventListener('click', function() {
+                const rollNumber = rollNumberInput.value.trim();
+                
+                if (rollNumber === '') {
+                    alert('Please enter a roll number');
+                    return;
+                }
+                
+                // Validate roll number format
+                const rollPattern = /^\d+$/;
+                if (!rollPattern.test(rollNumber)) {
+                    showNoResult();
+                    return;
+                }
+                
+                let student;
+                
+                if (currentClass === '9') {
+                    student = studentData['9'].find(s => s.rollNo === rollNumber);
+                } else if (currentClass === '11') {
+                    // Check both PCM and PCB for 11th grade
+                    student = studentData['11-pcm'].find(s => s.rollNo === rollNumber) || 
+                             studentData['11-pcb'].find(s => s.rollNo === rollNumber);
+                }
+                
+                if (student) {
+                    displayResult(student);
+                } else {
+                    showNoResult();
+                }
+            });
+            
+            // Display student result
+            function displayResult(student) {
+                document.getElementById('studentName').textContent = student.name;
+                document.getElementById('studentRoll').textContent = student.rollNo;
+                document.getElementById('studentClass').textContent = student.class;
+                document.getElementById('studentStream').textContent = student.stream;
+                
+                // Populate grades table
+                const gradesBody = document.getElementById('gradesBody');
+                gradesBody.innerHTML = '';
+                
+                student.subjects.forEach(subject => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${subject.name}</td>
+                        <td>${subject.obtained}</td>
+                        <td>${subject.max}</td>
+                        <td>${subject.grade}</td>
+                    `;
+                    gradesBody.appendChild(row);
+                });
+                
+                // Display percentage
+                document.getElementById('percentage').textContent = `${student.percentage}%`;
+                
+                // Show result container, hide no result message
+                resultContainer.style.display = 'block';
+                noResult.style.display = 'none';
+            }
+            
+            // Show no result message
+            function showNoResult() {
+                resultContainer.style.display = 'none';
+                noResult.style.display = 'block';
+            }
+            
+            // Allow searching by pressing Enter key
+            rollNumberInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+            
+            // Class selection
+            classButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    classButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentClass = this.dataset.class;
+                    rollNumberInput.placeholder = `Enter your roll number (${currentClass === '9' ? '1-49' : '1-16 for PCM, 1-23 for PCB'})...`;
+                    
+                    // Clear previous results
+                    resultContainer.style.display = 'none';
+                    noResult.style.display = 'none';
+                    rollNumberInput.value = '';
+                });
+            });
+            
+            // Leaderboard tabs
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateLeaderboard(this.dataset.tab);
+                });
+            });
+            
+            // Update leaderboard
+            function updateLeaderboard(tab) {
+                const leaderboardBody = document.getElementById('leaderboardBody');
+                leaderboardBody.innerHTML = '';
+                
+                let students = [];
+                
+                if (tab === '9') {
+                    students = [...studentData['9']];
+                } else if (tab === '11-pcm') {
+                    students = [...studentData['11-pcm']];
+                } else if (tab === '11-pcb') {
+                    students = [...studentData['11-pcb']];
+                }
+                
+                // Sort by percentage (descending)
+                students.sort((a, b) => b.percentage - a.percentage);
+                
+                // Display top 10
+                const top10 = students.slice(0, 10);
+                
+                top10.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.percentage}%</td>
+                    `;
+                    leaderboardBody.appendChild(row);
+                });
+            }
+            
+            // Initialize leaderboard
+            updateLeaderboard('9');
+        });
+    </script>
+</body>
+</html>
